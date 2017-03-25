@@ -2,6 +2,9 @@ package model;
 
 import org.ejml.simple.SimpleMatrix;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+
 public class SingleLayerPerceptron {
 
     private static final double nyu = 1;
@@ -43,6 +46,17 @@ public class SingleLayerPerceptron {
             System.out.println(process(new SimpleMatrix(new double[][]{{(b >> 1) & 1}, {b & 1}}), ResW));
         }
 
+        String res = "";
+        for (double i = -1; i <= 2; i += 0.4) {
+            for (double j = -1; j <= 2; j += 0.4) {
+                res += process(new SimpleMatrix(new double[][]{{i}, {j}}), ResW).get(0) + " ";
+//                res += String.format("%.2f ", i) +
+//                        String.format("%.2f ", j) +
+//                        process(new SimpleMatrix(new double[][]{{i}, {j}}), ResW).get(0) + "\n";
+            }
+            res += "\n";
+        }
+        printToFile(res);
     }
 
     private static SimpleMatrix train(int maxIterationCount, SimpleMatrix INPUTS, SimpleMatrix OUTPUTS, SimpleMatrix W) {
@@ -92,6 +106,14 @@ public class SingleLayerPerceptron {
             NET[0][i] = X.dot(W.extractVector(false, i));
         }
         return new SimpleMatrix(NET);
+    }
+
+    private static void printToFile(String res) {
+        try (PrintWriter out = new PrintWriter("output.txt")) {
+            out.println(res);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 }

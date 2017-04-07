@@ -2,9 +2,11 @@ package model;
 
 import org.ejml.simple.SimpleMatrix;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static java.lang.Math.sqrt;
 import static java.util.Arrays.asList;
@@ -26,13 +28,14 @@ public class SimpleHopfield {
     //          1, 1, 1, -1, 1
     //  }});
 
-    private static final int N = 25;
+    private static final int N = 100;
 
     private static SimpleMatrix X1;
     private static SimpleMatrix X2;
     private static SimpleMatrix X3;
 
     private static List<SimpleMatrix> alphabet;
+    private static List<SimpleMatrix> inputs;
 
     private static void initAlphabet() {
         X1 = new SimpleMatrix(new double[][]{{
@@ -60,7 +63,15 @@ public class SimpleHopfield {
     }
 
     public static void main(String[] args) {
-        initAlphabet();
+        //initAlphabet();
+        alphabet = initAlphabetFromFile("core/hopfield/core/files/alphabet.txt", '0');
+        inputs = initAlphabetFromFile("core/hopfield/core/files/inputs.txt", '0');
+        if (alphabet == null || inputs == null) {
+            System.out.println("error while process file");
+            return;
+        }
+        //int loopCount = 10;
+        int loopCount = inputs.size();
 
         SimpleMatrix W = new SimpleMatrix(new double[N][N]);
         for (SimpleMatrix X : alphabet) {
@@ -72,15 +83,16 @@ public class SimpleHopfield {
         }
 
         //----------------------
-        printW(W);
+        //printW(W);
         List<SimpleMatrix> iterations;
-        int maxIt = 0;
+        int maxIt = -1;
         //----------------------
 
         SimpleMatrix RES = new SimpleMatrix(new double[1][N]);
-        for (int j = 0; j < 10; j++) {
+        for (int j = 0; j < loopCount; j++) {
             //------------------
-            X = fun(SimpleMatrix.random(1, N, -1, 1, new Random()));
+            //X = fun(SimpleMatrix.random(1, N, -1, 1, new Random()));
+            X = inputs.get(j);
             iterations = new ArrayList<>(asList(X.copy()));
             //------------------
 
@@ -96,7 +108,7 @@ public class SimpleHopfield {
 
                 if (prevRES.isIdentical(RES, 0) || (prevRES.isIdentical(RES.scale(-1), 0))) {
                     //-----------------------
-                    if (i > maxIt) {
+                    if (true || i > maxIt) {
                         maxIt = i;
                         System.out.println(maxIt);
                         printGather(iterations);
@@ -109,8 +121,6 @@ public class SimpleHopfield {
 
         System.out.println();
         printGather(alphabet);
-        System.out.println();
-        printGather(asList(X, RES));
     }
 
     private static SimpleMatrix fun(SimpleMatrix M) {
@@ -149,5 +159,25 @@ public class SimpleHopfield {
         }
     }
 
+    private static List<SimpleMatrix> initAlphabetFromFile(String file, char mnsOne) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            List<SimpleMatrix> res = new ArrayList<>();
+            int it = 0;
+            SimpleMatrix M = new SimpleMatrix(new double[1][N]);
+            String sCurrentLine;
 
+            while ((sCurrentLine = br.readLine()) != null) {
+                for (char c: sCurrentLine.toCharArray())
+                    M.set(it++, c == mnsOne ? -1 : 1);
+                if (it >= N) {
+                    res.add(M.copy());
+                    it = 0;
+                }
+            }
+            return res;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

@@ -10,37 +10,47 @@ import java.util.Random;
 
 public class MultyLayeredPerceptron {
 
-    private static final double nyu = 0.1;
-    private static final double epsilon = 0.2;
+    private static final double nyu = 0.05;
+    private static final double epsilon = 0.1;
 
     private static SimpleMatrix INPUTS = new SimpleMatrix(new double[][]{
-            {0, 0, 1, 1},
-            {0, 1, 0, 1}
+            {0,   0, 0, 0.5, 0.5, 0.5, 1,   1, 1, 0.25, 0.25, 0.75, 0.75},
+            {0, 0.5, 1,   0, 0.5,   1, 0, 0.5, 1, 0.25, 0.75, 0.25, 0.75}
     });
     private static SimpleMatrix OUTPUTS = new SimpleMatrix(new double[][]{
+            {0.3},
             {1},
-            {0},
-            {0},
+            {0.3},
+            {1},
+            {0.3},
+            {1},
+            {0.3},
+            {1},
+            {0.3},
+            {1},
+            {1},
+            {1},
             {1}
     });
 
     private static List<Layer> perceptron = new ArrayList<>();
 
     public static void main(String[] args) {
-        perceptron.add(new Layer(2, 3));
-        perceptron.add(new Layer(3, 1));
+        perceptron.add(new Layer(2, 12));
+        perceptron.add(new Layer(12, 8));
+        perceptron.add(new Layer(8, 1));
 
-        trainPerceptron(1000, INPUTS, OUTPUTS);
+        trainPerceptron(50000, INPUTS, OUTPUTS);
 
         System.out.println(perceptron.get(0).W);
         System.out.println(perceptron.get(1).W);
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < INPUTS.numCols(); i++) {
             System.out.println(processPerceptron(INPUTS.extractVector(false, i)));
         }
 
         String res = "";
-        for (double i = -1; i <= 2; i += 0.4) {
-            for (double j = -1; j <= 2; j += 0.4) {
+        for (double i = -0.5; i <= 1.5; i += 0.1) {
+            for (double j = -0.5; j <= 1.5; j += 0.1) {
                 res += processPerceptron(new SimpleMatrix(new double[][]{{i}, {j}})).get(0) + " ";
             }
             res += "\n";

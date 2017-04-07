@@ -10,6 +10,7 @@
 
     <modules>
         <module>core/perceptrons</module>
+        <module>core/hopfield</module>
     </modules>
 
     <dependencies>

@@ -22,6 +22,6 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>perceptrons</artifactId>
+    <artifactId>hopfield</artifactId>
 
 </project>

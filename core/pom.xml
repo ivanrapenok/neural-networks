@@ -7,11 +7,26 @@
     <groupId>desiii.app</groupId>
     <artifactId>neural-networks</artifactId>
     <version>1.0</version>
+    <packaging>pom</packaging>
 
     <modules>
-        <module>core/perceptrons</module>
-        <module>core/hopfield</module>
+        <module>perceptrons</module>
+        <module>hopfield</module>
+        <module>commercial-traveler</module>
     </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>

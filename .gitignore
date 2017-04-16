@@ -4,3 +4,8 @@ neural-networks.iml
 core/perceptrons/perceptrons.iml
 
 core/perceptrons/target/
+core/commercial-traveler/commercial-traveler.iml
+core/commercial-traveler/target/
+core/hopfield/target/
+core/hopfield/target/classes core/hopfield/target/generated-sources core/hopfield/target/hopfield-1.0.jar core/hopfield/target/maven-archiver
+core/hopfield/target/classes/model/SimpleHopfield.class

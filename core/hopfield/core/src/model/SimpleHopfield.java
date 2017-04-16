@@ -94,6 +94,9 @@ public class SimpleHopfield {
             //X = fun(SimpleMatrix.random(1, N, -1, 1, new Random()));
             X = inputs.get(j);
             iterations = new ArrayList<>(asList(X.copy()));
+            //Energy
+            //System.out.println(-X.elementMult(X).elementSum() -(1/2) * fun((X.transpose()).mult(X)).elementMult(W).elementSum());
+            System.out.println(-fun((X.transpose()).mult(X)).elementMult(W).elementSum());
             //------------------
 
             RES = fun(W.mult(X.transpose()));
@@ -101,6 +104,9 @@ public class SimpleHopfield {
             for (int i = 0; i < 100; i++) {
                 prevRES = RES.copy();
                 //---------------
+                //Energy
+                //System.out.println(-RES.elementMult(X.transpose()).elementSum() -(1/2) * fun(RES.mult(RES.transpose())).elementMult(W).elementSum());
+                System.out.println(-fun(RES.mult(RES.transpose())).elementMult(W).elementSum());
                 //printGather(asList(prevRES, RES));
                 iterations.add(RES.copy());
                 //---------------
@@ -126,7 +132,7 @@ public class SimpleHopfield {
     private static SimpleMatrix fun(SimpleMatrix M) {
         SimpleMatrix RES = M.copy();
         for (int i = 0; i < RES.getNumElements(); i++)
-            RES.set(i, RES.get(i) > 0 ? 1 : -1);
+            RES.set(i, RES.get(i) == 0 ? 0 : RES.get(i) > 0 ? 1 : -1);
         return RES;
     }
 
@@ -168,7 +174,7 @@ public class SimpleHopfield {
 
             while ((sCurrentLine = br.readLine()) != null) {
                 for (char c: sCurrentLine.toCharArray())
-                    M.set(it++, c == mnsOne ? -1 : 1);
+                    M.set(it++, c == mnsOne ? 1 : -1);
                 if (it >= N) {
                     res.add(M.copy());
                     it = 0;
